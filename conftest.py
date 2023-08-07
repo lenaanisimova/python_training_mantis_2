@@ -1,44 +1,32 @@
-class SessionHelper:
-    def __init__(self, app):
-        self.app = app
-
-    def login(self, login, password):
-        wd = self.app.wd
-        self.app.navigation.open_home_page()
-        wd.find_element_by_name("username").click()
-        wd.find_element_by_name("username").clear()
-        wd.find_element_by_name("username").send_keys(login)
-        wd.find_element_by_name("password").click()
-        wd.find_element_by_name("password").clear()
-        wd.find_element_by_name("password").send_keys(password)
-        wd.find_element_by_css_selector('input[type="submit"]').click()
-
-    def logout(self):
-        wd = self.app.wd
-        wd.find_element_by_link_text("Logout").click()
-
-    def ensure_logout(self):
-        wd = self.app.wd
-        if self.is_logged_in():
-            self.logout()
-
-    def is_logged_in(self):
-        wd = self.app.wd
-        return len(wd.find_elements_by_link_text("Logout")) > 0
-
-    def is_logged_in_as(self, login):
-        wd = self.app.wd
-        return self.get_logget_user() == login
-
-    def get_logget_user(self):
-        wd = self.app.wd
-        return wd.find_element_by_css_selector("td.login-info-left span").text
-
-    def ensure_login(self, login, password):
-        wd = self.app.wd
-        if self.is_logged_in():
-            if self.is_logged_in_as(login):
-                return
-            else:
-                self.logout()
-        self.login(login, password)
+import os.path
+import pytest
+import json
+from fixture.application import Application
+fixture = None
+target = None
+def load_config(file):
+    global target
+    if target is None:
+        config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+        with open(config_file) as f:
+            target = json.load(f)
+    return target
+@pytest.fixture
+def app(request):
+    global fixture
+    global target
+    browser = request.config.getoption("--browser")
+    web_config = load_config(request.config.getoption("--target"))['web']
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=web_config["baseUrl"])
+    return fixture
+@pytest.fixture(scope="session", autouse=True)
+def stop(request):
+    def fin():
+        fixture.session.ensure_logout()
+        fixture.destroy()
+    request.addfinalizer(fin)
+    return fixture
+def pytest_addoption(parser):
+    parser.addoption("--browser", action="store", default="firefox")
+    parser.addoption("--target", action="store", default="target.json")

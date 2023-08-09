@@ -1,3 +1,4 @@
+#Задание 26
 from telnetlib import Telnet
 
 class JamesHelper:

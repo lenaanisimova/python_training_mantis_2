@@ -1,3 +1,4 @@
+#Задание 26
 from suds.client import Client
 from suds import WebFault
 from model.project import Project

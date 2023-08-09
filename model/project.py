@@ -1,4 +1,4 @@
-
+#Задание 26
 class Project:
     def __init__(self, name=None, status=None, inherit_global_categories=None, view_status=None, description=None):
         self.name = name

@@ -1,4 +1,4 @@
-
+#Задание 26
 class SessionHelper:
 
     def __init__(self, app):

@@ -1,6 +1,6 @@
 import random
 import string
-
+#Задание 26
 def random_username(prefix, maxlen):
     symbols = string.ascii_letters
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])

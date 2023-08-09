@@ -1,4 +1,4 @@
-
+#Задание 26
 from model.project import Project
 from generator.project import testdata
 import random

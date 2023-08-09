@@ -8,7 +8,6 @@ class NavigationHelper:
     def return_to_home_page(self):
         wd = self.app.wd
         if not (wd.current_url.endswith("/addressbook") and len(wd.find_elements_by_name("Number of results")) > 0):
-          #  wd.find_element_by_link_text("home page").click()
           wd.find_element_by_link_text("home").click()
     def open_groups_page(self):
         wd = self.app.wd

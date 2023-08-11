@@ -10,10 +10,10 @@ def test_delete_project(app):
         project = testdata
         app.project.add_project(project)
 
-    #old_projects = app.project.get_projects_list()
     old_projects = app.soap.get_projects_list()
-    projects = app.project.get_projects_list()
-    proj = random.choice(projects)
+    #projects = app.project.get_projects_list()
+    proj = random.choice(old_projects)
+
 
     app.project.delete_project(proj)
     old_projects.remove(proj)
